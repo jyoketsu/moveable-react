@@ -5,6 +5,7 @@ export interface Props {
   style?: any;
   rightClickToStart?: boolean;
   scrollable?: boolean;
+  scrollStep?: number;
 }
 
 let clickX = 0;
@@ -14,17 +15,32 @@ export function Moveable({
   style,
   rightClickToStart,
   scrollable,
+  scrollStep,
   children,
 }: Props) {
   const [translateX, setTranslateX] = useState(0);
   const [translateY, setTranslateY] = useState(0);
   const [started, setStarted] = useState(false);
 
+  const step: number = scrollStep || 23;
+
   const handleMoveStart = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    clickX = e.clientX;
-    clickY = e.clientY;
-    setStarted(true);
+    // 左键
+    if (e.nativeEvent.which === 1) {
+      if (!rightClickToStart) {
+        clickX = e.clientX;
+        clickY = e.clientY;
+        setStarted(true);
+      }
+    } else if (e.nativeEvent.which === 3) {
+      // 右键
+      if (rightClickToStart) {
+        clickX = e.clientX;
+        clickY = e.clientY;
+        setStarted(true);
+      }
+    }
   };
 
   const handleTouchStart = (e: React.TouchEvent<HTMLElement>) => {
@@ -69,15 +85,21 @@ export function Moveable({
   const handleWheel = (e: any) => {
     if (scrollable) {
       if (e.deltaY < 0) {
-        setTranslateY(translateY + 8);
+        setTranslateY(translateY + step);
       } else {
-        setTranslateY(translateY - 8);
+        setTranslateY(translateY - step);
       }
     }
   };
 
   const handleMoveEnd = () => {
     setStarted(false);
+  };
+
+  const handleContextMenu = (e: React.MouseEvent<HTMLElement>) => {
+    if (rightClickToStart) {
+      e.preventDefault();
+    }
   };
 
   const propsStyle = style || {};
@@ -92,8 +114,9 @@ export function Moveable({
         },
         ...propsStyle,
       }}
-      onContextMenu={rightClickToStart ? handleMoveStart : undefined}
-      onMouseDown={rightClickToStart ? undefined : handleMoveStart}
+      onContextMenu={handleContextMenu}
+      // onMouseDown={rightClickToStart ? undefined : handleMoveStart}
+      onMouseDown={handleMoveStart}
       onMouseUp={handleMoveEnd}
       onMouseLeave={handleMoveEnd}
       onMouseMove={handleMove}

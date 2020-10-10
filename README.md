@@ -18,11 +18,12 @@ npm i moveable-react
 
 ## Props
 
-| Name              | Type    |
-| ----------------- | ------- |
-| rightClickToStart | boolean |
-| scrollable        | boolean |
-| style             | Object  |
+| Name              | Type    | default |
+| ----------------- | ------- | ------- |
+| rightClickToStart | boolean | -       |
+| scrollable        | boolean | -       |
+| style             | Object  | -       |
+| scrollStep        | number  | 23      |
 
 <br/>
 
