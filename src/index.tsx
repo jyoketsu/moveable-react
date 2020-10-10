@@ -22,7 +22,7 @@ export function Moveable({
   const [translateY, setTranslateY] = useState(0);
   const [started, setStarted] = useState(false);
 
-  const step: number = scrollStep || 23;
+  const step: number = scrollStep ? scrollStep : 23;
 
   const handleMoveStart = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -115,7 +115,6 @@ export function Moveable({
         ...propsStyle,
       }}
       onContextMenu={handleContextMenu}
-      // onMouseDown={rightClickToStart ? undefined : handleMoveStart}
       onMouseDown={handleMoveStart}
       onMouseUp={handleMoveEnd}
       onMouseLeave={handleMoveEnd}
